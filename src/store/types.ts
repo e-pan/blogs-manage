@@ -1,0 +1,2 @@
+export const MODIFY_PRICE = 'MODIFY_PRICE'
+export const USER_RIGHTS = 'USER_RIGHTS'

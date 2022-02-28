@@ -54,7 +54,8 @@ const createTreeData = (data?:any, childrenId?:any, parentId?:any) => {
   return tree;
 }
 // 接口地址
-const apiHost = 'http://api.fuzhongkuo.com/';
+// const apiHost = 'http://api.fuzhongkuo.com/';
+const apiHost = 'http://localhost:4001/';
 // 上传地址
 const uploadHostPublic = `${apiHost}/upload`
 // 当前日期

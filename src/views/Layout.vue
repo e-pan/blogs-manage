@@ -17,76 +17,42 @@ export default defineComponent({
   setup() {
     const menus = ref([
       {
-        name: "客户管理",
+        name: "消息管理",
         path: "",
-        subMenu: [
+        children: [
           {
-            name: "企业信息管理",
-            path: "/customer/company",
-          },
-          {
-            name: "账号信息管理",
-            path: "/customer/user",
-          },
-          {
-            name: "前线企业查询",
-            path: "/customer/companyBefore",
+            name: "消息列表",
+            path: "/message/list",
           },
         ],
       },
       {
-        name: "基础配置",
+        name: "友链管理",
         path: "",
-        subMenu: [
+        children: [
           {
-            name: "公共目录管理",
-            path: "/basics/category",
-          },
-          {
-            name: "基础项目列表",
-            path: "/basics/items",
+            name: "友链列表",
+            path: "/friend/list",
           },
         ],
       },
       {
-        name: "公共套餐",
+        name: "标签管理",
         path: "",
-        subMenu: [
+        children: [
           {
-            name: "公共套餐管理",
-            path: "/package/common",
+            name: "标签列表",
+            path: "/tag/list",
           },
         ],
       },
       {
-        name: "功能权限管理",
+        name: "文章管理",
         path: "",
-        subMenu: [
+        children: [
           {
-            name: "菜单管理",
-            path: "/system/menu",
-          },
-          {
-            name: "用户管理",
-            path: "/system/user",
-          },
-          {
-            name: "角色配置",
-            path: "/system/role",
-          },
-          {
-            name: "实验室配置",
-            path: "/system/laboratory",
-          },
-        ],
-      },
-      {
-        name: "订单管理",
-        path: "",
-        subMenu: [
-          {
-            name: "订单管理",
-            path: "/order/list",
+            name: "文章列表",
+            path: "/article/list",
           },
         ],
       },

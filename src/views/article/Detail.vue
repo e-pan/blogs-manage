@@ -24,7 +24,7 @@
         <el-form-item label="缩略图">
           <img :src="state.form.thumbnail" v-if="state.form.thumbnail" />
           <el-upload
-            :action="host + '/upload'"
+            :action="apiHost + 'upload'"
             :on-preview="handlePreview"
             :on-remove="handleRemove"
             :before-remove="beforeRemove"
@@ -67,7 +67,7 @@
             @change="onEditorChange($event)"
           ></quill-editor>
           <el-upload
-            :action="host + '/upload'"
+            :action="apiHost + 'upload'"
             :on-success="onSuccessEdit"
             style="position: fixed; top: -999px; left: -999px"
           >
@@ -88,6 +88,8 @@
 import { defineComponent, reactive, onMounted } from "vue";
 import { getArticle, delArticle } from "@/request/blog";
 import { ElMessageBox, ElMessage } from "element-plus";
+import { apiHost } from '@/utils/util'
+
 export default defineComponent({
   setup() {
     onMounted(() => {
@@ -164,6 +166,7 @@ export default defineComponent({
       pageEmitFun,
       handleAdd,
       handleSearch,
+      apiHost
     };
   },
 });

@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "blogs-components": "^0.1.1",
+    "blogs-components": "^0.1.2",
     "crypto-js": "^4.0.0",
     "crypto-md5": "^1.0.0",
     "element-plus": "^2.0.3",

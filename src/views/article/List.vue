@@ -66,12 +66,12 @@
         <el-table-column prop="update_time" label="更新时间"></el-table-column>
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
         <el-table-column prop="is_top" label="是否顶置">
-          <!-- <template #default="scope">
+          {{scope.row.is_top}}
+          <template #default="scope">
             <el-switch
-              v-model="scope.row.is_top ? true : false"
               @change="handleChange(scope.row, scope.$index)"
             ></el-switch>
-          </template> -->
+          </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="100">
           <template #default="scope">
@@ -93,6 +93,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { getArticle, delArticle } from "@/request/blog";
 import { ElMessageBox, ElMessage } from "element-plus";
 export default defineComponent({
@@ -101,6 +102,8 @@ export default defineComponent({
       qryTag(state.pageParams);
     });
 
+    const router = useRouter();
+    const route = useRoute();
     const state = reactive({
       breadcrumb: {
         delimiter: "/",
@@ -128,10 +131,10 @@ export default defineComponent({
         pageTotal: 0,
       },
       param: {
-        type: ''
+        type: "",
       },
       types: [],
-      dateValue: ''
+      dateValue: "",
     });
 
     const qryTag = (params) => {
@@ -160,8 +163,17 @@ export default defineComponent({
     const pageEmitFun = (val) => {
       qryTag(val);
     };
-    const handleAdd = () => {};
-    const handleSearch = () => {}
+    const handleAdd = () => {
+      window.open("/article/add")
+    };
+    const handleSearch = () => {};
+
+    const handleModify = (id) => {
+      // router.push({
+      //   path: "/article/" + id,
+      // });
+      window.open("/article/" + id)
+    };
 
     return {
       state,
@@ -169,7 +181,8 @@ export default defineComponent({
       handleDel,
       pageEmitFun,
       handleAdd,
-      handleSearch
+      handleSearch,
+      handleModify,
     };
   },
 });

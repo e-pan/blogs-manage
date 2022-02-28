@@ -103,7 +103,7 @@ export default defineComponent({
     });
 
     onMounted(() => {
-      userInfo.value.userName = local.get("userInfo").userName;
+      userInfo.value.userName = 'Admin'
     });
 
     return {

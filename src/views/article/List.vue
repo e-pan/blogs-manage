@@ -66,7 +66,7 @@
         <el-table-column prop="update_time" label="更新时间"></el-table-column>
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
         <el-table-column prop="is_top" label="是否顶置">
-          {{scope.row.is_top}}
+          <!-- {{scope.row.is_top}} -->
           <template #default="scope">
             <el-switch
               @change="handleChange(scope.row, scope.$index)"

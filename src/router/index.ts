@@ -15,7 +15,7 @@ router.beforeEach((to, from, next) => {
       没有登录返回登录页面
       这里可以做路由的权限验证，动态路由显示
     */
-   debugger
+   
     // next()
     if (local.get("token")) {
       next()

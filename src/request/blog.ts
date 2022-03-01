@@ -104,6 +104,13 @@ const modArticle = (params: any): Promise<any> => {
       return res.code === 200 ? true : false
     })
 }
+// 获取文章详情
+const dtlArticle = (params: any): Promise<any> => {
+  return request('article/detail', params, 'post')
+    .then((res) => {
+      return res.data
+    })
+}
 
 export {
   getMessage,
@@ -120,5 +127,6 @@ export {
   getArticle,
   delArticle,
   addArticle,
-  modArticle
+  modArticle,
+  dtlArticle
 }

@@ -2,7 +2,7 @@
 <template>
   <el-row>
     <el-col :span="24">
-      <TicBreadcrumb :breadcrumb='state.breadcrumb' />
+      <ComponentBreadcrumb :breadcrumb='state.breadcrumb' />
     </el-col>
   </el-row>
   <el-row class='list-datas'>
@@ -20,7 +20,7 @@
         <el-table-column prop="content"
                          label="留言内容">
           <template #default='scope'>
-            <TicTooltip v-if='scope.row.content'
+            <ComponentTooltip v-if='scope.row.content'
                         :content='scope.row.content'
                         :width='280' />
           </template>
@@ -52,7 +52,7 @@
         </el-table-column>
       </el-table>
     </el-col>
-    <TicPagination :pageParams='state.pageParams'
+    <ComponentPagination :pageParams='state.pageParams'
                    @pageEmit='pageEmitFun' />
   </el-row>
   <el-dialog title="留言详情"

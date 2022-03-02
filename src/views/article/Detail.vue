@@ -2,7 +2,7 @@
 <template>
   <el-row>
     <el-col :span="24">
-      <TicBreadcrumb :breadcrumb="state.breadcrumb" />
+      <ComponentBreadcrumb :breadcrumb="state.breadcrumb" />
     </el-col>
   </el-row>
   <el-row class="list-datas">
@@ -23,20 +23,17 @@
           </el-select>
         </el-form-item>
         <el-form-item label="缩略图">
-          <img :src="state.form.thumbnail"
-               v-if="state.form.thumbnail" />
-          <!-- <el-upload :action="apiHost + 'upload'"
-                     :on-preview="handlePreview"
-                     :on-remove="handleRemove"
-                     :before-remove="beforeRemove"
-                     :on-success="onSuccess"
-                     multiple
-                     :limit="3"
-                     :on-exceed="handleExceed">
-            <el-button size="small"
-                       type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-          </el-upload> -->
+          <div style="width: 100%;">
+            <img :src="state.form.thumbnail"
+                 v-if="state.form.thumbnail" />
+          </div>
+          <ComponentUpload :action="upload.action"
+                           :show-file-list="upload.showFileList"
+                           :multiple="upload.multiple"
+                           :limit="upload.limit"
+                           :size="upload.size"
+                           :accept="upload.accept"
+                           @uploadEmit="uploadEmitFun" />
         </el-form-item>
         <el-form-item label="作者">
           <el-input v-model="state.form.author"></el-input>
@@ -45,12 +42,17 @@
           <el-input v-model="state.form.sourse"></el-input>
         </el-form-item>
         <el-form-item label="标签">
-          <el-checkbox-group v-model="state.form.tag_id">
-            <el-checkbox v-for="(item, index) in tags"
-                         :label="item.name"
-                         :vlaue="item.id"
-                         :key="index"></el-checkbox>
-          </el-checkbox-group>
+          <el-select v-model="state.tags"
+                     multiple
+                     placeholder="请选择标签"
+                     clearable
+                     style="width: 100%;">
+            <el-option v-for="item in state.tagList"
+                       :key="item.id"
+                       :label="item.name"
+                       :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="是否顶置">
           <el-switch v-model="state.form.is_top"></el-switch>
@@ -63,13 +65,6 @@
         <el-form-item label="内容">
           <editor v-model="state.form.content"
                   :init="init" />
-          <!-- <el-upload :action="apiHost + 'upload'"
-                     :on-success="onSuccessEdit"
-                     style="position: fixed; top: -999px; left: -999px">
-            <el-button size="small"
-                       type="primary"
-                       id="uploadImg">点击上传</el-button>
-          </el-upload> -->
         </el-form-item>
         <el-form-item>
           <el-button type="primary"
@@ -106,6 +101,7 @@ import 'tinymce/plugins/insertdatetime'
 import 'tinymce/plugins/emoticons'
 import 'tinymce/plugins/hr'
 import 'tinymce/plugins/searchreplace'
+import axios from 'axios'
 
 export default defineComponent({
   components: {
@@ -139,6 +135,26 @@ export default defineComponent({
           items: 'newdocument restoredraft | preview | print',
         },
       },
+      file_browser_callback_types: 'image',
+      images_reuse_filename: true,
+      images_upload_handler: (blobInfo, success, failure) => {
+        let formdata = new FormData()
+        const file = blobInfo.blob()
+        formdata.append('file', file, file.name)
+        const url = `${apiHost}'upload'`
+        axios
+          .post(url, formdata, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          })
+          .then((res: any) => {
+            if (res.data.code === 200) {
+              success(res.data.data)
+            } else {
+              ElMessage.error(res.data.dataMsg)
+              failure()
+            }
+          })
+      },
     }
     onMounted(() => {
       tinymce.init(init as any)
@@ -167,7 +183,12 @@ export default defineComponent({
           },
         ],
       },
-      form: {},
+      form: {
+        thumbnail: '',
+        tag_id: '',
+      },
+      tags: [],
+      tagList: [],
     })
     const types = reactive([
       {
@@ -183,45 +204,63 @@ export default defineComponent({
         name: '转载',
       },
     ])
-    let tags = reactive([])
+    const upload = reactive({
+      action: 'http://api.fuzhongkuo.com/upload',
+      showFileList: false,
+      multiple: false,
+      limit: 5,
+      size: 1,
+      accept: 'image/*,.pdf',
+    })
 
     const getDtlArticle = (id) => {
       dtlArticle({ id }).then((res) => {
-        res.tag_id = String(res.tag_id)
+        state.tags = res.tag_id.split(',')
         state.form = res
       })
     }
     const handleAdd = () => {}
     const handleSearch = () => {}
     const onSubmit = () => {
+      state.form.tag_id = state.tags.join(',')
       console.log(state.form)
+      const { id } = route.params
+      if (id !== 'add') {
+        modArticle(state.form).then((res) => {
+          if (res) ElMessage.success('修改成功')
+        })
+      } else {
+        addArticle(state.form).then((res) => {
+          if (res) ElMessage.success('添加成功')
+        })
+      }
     }
     const handleCancel = () => {
       router.push('/article/list')
-    }
-    const onEditorChange = (event) => {
-      console.log(event)
     }
     const qryTag = () => {
       getTag({
         pageNum: 1,
         pageRow: 999,
       }).then((res) => {
-        tags = res.items
+        state.tagList = res.items
       })
+    }
+    const uploadEmitFun = (val: any): void => {
+      state.form.thumbnail = val[0].response.data
     }
 
     return {
       state,
       types,
-      tags,
+      upload,
       handleAdd,
       handleSearch,
       onSubmit,
       handleCancel,
-      onEditorChange,
       apiHost,
       init,
+      uploadEmitFun,
     }
   },
 })

@@ -1,5 +1,5 @@
 <template>
-  <TicLayout
+  <ComponentLayout
     :menus="menus"
     :systems="systems"
     :userInfo="userInfo"

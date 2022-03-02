@@ -2,7 +2,7 @@
 <template>
   <el-row>
     <el-col :span="24">
-      <TicBreadcrumb :breadcrumb='state.breadcrumb' />
+      <ComponentBreadcrumb :breadcrumb='state.breadcrumb' />
     </el-col>
   </el-row>
   <el-row class='list-datas'>
@@ -34,7 +34,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <TicPagination :pageParams='state.pageParams'
+    <ComponentPagination :pageParams='state.pageParams'
                    @pageEmit='pageEmitFun' />
   </el-row>
   <el-dialog title="友链维护"

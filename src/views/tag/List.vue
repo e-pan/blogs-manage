@@ -2,7 +2,7 @@
 <template>
   <el-row>
     <el-col :span="24">
-      <TicBreadcrumb :breadcrumb="state.breadcrumb" />
+      <ComponentBreadcrumb :breadcrumb="state.breadcrumb" />
       <el-button @click="handleAdd">添加</el-button>
     </el-col>
   </el-row>
@@ -24,7 +24,7 @@
         </el-table-column>
       </el-table>
     </el-col>
-    <TicPagination :pageParams="state.pageParams" @pageEmit="pageEmitFun" />
+    <ComponentPagination :pageParams="state.pageParams" @pageEmit="pageEmitFun" />
   </el-row>
   <el-dialog title="标签维护" v-model="state.dialogBox">
     <el-form label-width="80px" :model="state.dialogFrom">

@@ -1,3 +1,3 @@
 <template>
-  <Tic404 />
+  <Component404 />
 </template>

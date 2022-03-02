@@ -1,5 +1,5 @@
 <template>
-  <TicLogin :api-host='apiHost'
+  <ComponentLogin :api-host='apiHost'
             :redirect='redirect' />
 </template>
 

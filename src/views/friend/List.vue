@@ -5,6 +5,11 @@
       <ComponentBreadcrumb :breadcrumb='state.breadcrumb' />
     </el-col>
   </el-row>
+  <el-row>
+    <el-col :span="24">
+      <el-button @click="handleAdd">添加</el-button>
+    </el-col>
+  </el-row>
   <el-row class='list-datas'>
     <el-table :data="state.tableData"
               style="width: 100%">
@@ -35,43 +40,37 @@
       </el-table-column>
     </el-table>
     <ComponentPagination :pageParams='state.pageParams'
-                   @pageEmit='pageEmitFun' />
+                         @pageEmit='pageEmitFun' />
   </el-row>
   <el-dialog title="友链维护"
              v-model="state.dialogBox">
     <el-form label-width="80px"
-             :model="dialogFrom">
+             :model="state.dialogFrom">
       <el-form-item label="链接名称">
-        <el-input v-model="dialogFrom.name"></el-input>
+        <el-input v-model="state.dialogFrom.name"></el-input>
       </el-form-item>
       <el-form-item label="链接地址">
         <el-input placeholder="请输入内容"
-                  v-model="dialogFrom.link"></el-input>
+                  v-model="state.dialogFrom.link"></el-input>
       </el-form-item>
       <el-form-item label="联系方式">
-        <el-input v-model="dialogFrom.phone"
+        <el-input v-model="state.dialogFrom.phone"
                   maxlength="11"></el-input>
       </el-form-item>
       <el-form-item label="缩略图">
-        <img :src="dialogFrom.thumbnail"
-             v-if='dialogFrom.thumbnail' />
-        <el-upload :action='host + "/upload"'
-                   :on-preview="handlePreview"
-                   :on-remove="handleRemove"
-                   :before-remove="beforeRemove"
-                   :on-success="onSuccess"
-                   multiple
-                   :limit="3"
-                   :on-exceed="handleExceed">
-          <el-button size="small"
-                     type="primary">点击上传</el-button>
-          <div slot="tip"
-               class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-        </el-upload>
+        <img :src="state.dialogFrom.thumbnail"
+             v-if='state.dialogFrom.thumbnail' />
+        <ComponentUpload :action="upload.action"
+                         :show-file-list="upload.showFileList"
+                         :multiple="upload.multiple"
+                         :limit="upload.limit"
+                         :size="upload.size"
+                         :accept="upload.accept"
+                         @uploadEmit="uploadEmitFun" />
       </el-form-item>
       <el-form-item label="备注">
         <el-input type="textarea"
-                  v-model="dialogFrom.remark"></el-input>
+                  v-model="state.dialogFrom.remark"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary"
@@ -87,7 +86,7 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 export default defineComponent({
   setup() {
     onMounted(() => {
-      qryMessageList(state.pageParams)
+      qryMessageList()
     })
 
     const state = reactive({
@@ -109,7 +108,7 @@ export default defineComponent({
         ],
       },
       tableData: [],
-      dialogFrom: {},
+      dialogFrom: {} as any,
       dialogBox: false,
       pageParams: {
         pageNum: 1,
@@ -117,14 +116,22 @@ export default defineComponent({
         pageTotal: 0,
       },
     })
+    const upload = reactive({
+      action: 'http://api.fuzhongkuo.com/upload',
+      showFileList: false,
+      multiple: false,
+      limit: 5,
+      size: 1,
+      accept: 'image/*,.pdf',
+    })
 
-    const qryMessageList = (params) => {
-      getFriend(Object.assign(params)).then((res) => {
+    const qryMessageList = () => {
+      getFriend(state.pageParams).then((res) => {
         state.tableData = res.items
         state.pageParams.pageTotal = res.total
       })
     }
-    const handleDetail = (row) => {
+    const handleModify = (row) => {
       state.dialogFrom = row
       state.dialogBox = true
     }
@@ -135,7 +142,7 @@ export default defineComponent({
       }).then((resConfirm) => {
         if (resConfirm) {
           delFriend({ id }).then(() => {
-            qryMessageList(state.pageParams)
+            qryMessageList()
             ElMessage.success('删除成功！')
           })
         }
@@ -144,12 +151,36 @@ export default defineComponent({
     const pageEmitFun = (val) => {
       console.log(val)
     }
+    const handleAdd = () => {
+      state.dialogBox = true
+      state.dialogFrom = {}
+    }
+    const uploadEmitFun = (val: any): void => {
+      state.dialogFrom.thumbnail = val[0].response.data
+    }
+    const submitForm = () => {
+      if (state.dialogFrom.id) {
+        modFriend(state.dialogFrom).then(res => {
+          qryMessageList()
+          ElMessage.success('修改成功！')
+        })
+      } else {
+        addFriend(state.dialogFrom).then(res => {
+          qryMessageList()
+          ElMessage.success('添加成功！')
+        })
+      }
+    }
 
     return {
       state,
-      handleDetail,
+      upload,
+      handleModify,
       handleDel,
       pageEmitFun,
+      handleAdd,
+      uploadEmitFun,
+      submitForm
     }
   },
 })

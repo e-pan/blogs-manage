@@ -109,42 +109,42 @@ export default defineComponent({
   },
   setup() {
     const init = {
-      language_url: require('./static/langs/zh_CN.js'), // 中文语言包路径
-      language: 'zh_CN',
-      skin_url: require('./static/skins/ui/oxide/skin.css'), // 编辑器皮肤样式
-      height: 320,
-      toolbar_mode: 'none',
+      language_url: require("../../../public/static/langs/zh_CN.js"), // 中文语言包路径
+      language: "zh_CN",
+      skin_url: require("../../../public/static/skins/ui/oxide/skin.css"), // 编辑器皮肤样式
+      height: 800,
+      toolbar_mode: "none",
       plugins:
-        'image searchreplace link code table lists print preview fullscreen restoredraft codesample anchor pagebreak media insertdatetime emoticons hr', // 插件需要import进来
+        "image searchreplace link code table lists print preview fullscreen restoredraft codesample anchor pagebreak media insertdatetime emoticons hr", // 插件需要import进来
       toolbar1:
-        'undo redo cut copy paste searchreplace | styleselect fontselect fontsizeselect | lineheight forecolor backcolor bold italic underline strikethrough ',
+        "undo redo cut copy paste searchreplace | styleselect fontselect fontsizeselect | lineheight forecolor backcolor bold italic underline strikethrough ",
       toolbar2:
-        'alignleft aligncenter alignright alignjustify outdent indent | removeformat subscript superscript | link image media insertdatetime emoticons anchor pagebreak hr blockquote  table numlist bullist codesample | code print preview fullscreen',
-      content_style: 'p {margin: 5px 0; font-size: 14px}',
-      fontsize_formats: '12px 14px 16px 18px 24px 36px 48px 56px 72px',
+        "alignleft aligncenter alignright alignjustify outdent indent | removeformat subscript superscript | link image media insertdatetime emoticons anchor pagebreak hr blockquote  table numlist bullist codesample | code print preview fullscreen",
+      content_style: "p {margin: 5px 0; font-size: 14px}",
+      fontsize_formats: "12px 14px 16px 18px 24px 36px 48px 56px 72px",
       font_formats:
-        '微软雅黑=Microsoft YaHei,Helvetica Neue,PingFang SC,sans-serif;苹果苹方=PingFang SC,Microsoft YaHei,sans-serif;宋体=simsun,serif;仿宋体=FangSong,serif;黑体=SimHei,sans-serif;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;',
+        "微软雅黑=Microsoft YaHei,Helvetica Neue,PingFang SC,sans-serif;苹果苹方=PingFang SC,Microsoft YaHei,sans-serif;宋体=simsun,serif;仿宋体=FangSong,serif;黑体=SimHei,sans-serif;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;",
       branding: false,
       elementpath: false,
       resize: false, // 禁止改变大小
       statusbar: false, // 隐藏底部状态栏
-      menubar: 'file edit insert view format table',
+      menubar: "file edit insert view format table",
       menu: {
         file: {
-          title: 'File',
-          items: 'newdocument restoredraft | preview | print',
+          title: "File",
+          items: "newdocument restoredraft | preview | print",
         },
       },
-      file_browser_callback_types: 'image',
+      file_browser_callback_types: "image",
       images_reuse_filename: true,
       images_upload_handler: (blobInfo, success, failure) => {
         let formdata = new FormData()
         const file = blobInfo.blob()
-        formdata.append('file', file, file.name)
-        const url = `${apiHost}'upload'`
+        formdata.append("file", file, file.name)
+        const url = `${apiHost}upload`
         axios
           .post(url, formdata, {
-            headers: { 'Content-Type': 'multipart/form-data' },
+            headers: { "Content-Type": "multipart/form-data" },
           })
           .then((res: any) => {
             if (res.data.code === 200) {
@@ -216,11 +216,10 @@ export default defineComponent({
     const getDtlArticle = (id) => {
       dtlArticle({ id }).then((res) => {
         state.tags = res.tag_id.split(',')
+        console.log(state.tags)
         state.form = res
       })
     }
-    const handleAdd = () => {}
-    const handleSearch = () => {}
     const onSubmit = () => {
       state.form.tag_id = state.tags.join(',')
       console.log(state.form)
@@ -243,6 +242,9 @@ export default defineComponent({
         pageNum: 1,
         pageRow: 999,
       }).then((res) => {
+        res.items.forEach(v => {
+          v.id = String(v.id)
+        })
         state.tagList = res.items
       })
     }
@@ -254,8 +256,6 @@ export default defineComponent({
       state,
       types,
       upload,
-      handleAdd,
-      handleSearch,
       onSubmit,
       handleCancel,
       apiHost,

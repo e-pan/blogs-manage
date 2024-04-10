@@ -117,7 +117,7 @@ export default defineComponent({
       },
     })
     const upload = reactive({
-      action: 'http://api.fuzhongkuo.com/upload',
+      action: 'https://api.fuzhongkuo.com/upload',
       showFileList: false,
       multiple: false,
       limit: 5,

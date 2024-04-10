@@ -6,7 +6,7 @@ import axios from 'axios'
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 const config = {
-  baseURL: process.env.baseURL || process.env.apiUrl || 'http://api.fuzhongkuo.com/'
+  baseURL: process.env.baseURL || process.env.apiUrl || 'https://api.fuzhongkuo.com/'
   // timeout: 60 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control
 }
